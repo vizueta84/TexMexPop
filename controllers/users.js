@@ -15,7 +15,7 @@ const getAllUsers = (req, res) => {
   });
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   const { username, email, password } = req.body;
   const sql = `
     INSERT INTO users (username, email, password)
@@ -31,7 +31,7 @@ const createUser = async (req, res) => {
         if (err) {
           return res.status(400).json({ err, msg: "Something went wrong" });
         }
-        res.json({ msg: "User created" });
+       next();
       });
     } catch (error) {
       return res.json(error);
