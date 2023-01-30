@@ -1,7 +1,7 @@
 const instance = require("../util/connection");
 
 const getAllRestaurants = (req, res) => {
-  console.log(req)
+  console.log(req);
   const sql = "SELECT * FROM restaurants";
 
   instance.query(sql, (err, results) => {
@@ -25,20 +25,29 @@ const getRestaurantById = (req, res) => {
 };
 
 const createRestaurant = (req, res) => {
-  const { restaurant_name, link, description } = req.body;
+  const { restaurant_name, link, description, address, city, state, zip } =
+    req.body;
   // console.log(req, "this is the request");
   const sql = `
-    INSERT INTO ?? (??, ??, ??)
-    VALUES (?,?,?)
+    INSERT INTO ?? (??, ??, ??, ??, ??, ??, ??)
+    VALUES (?,?,?,?,?,?,?)
   `;
   const replacements = [
     "restaurants",
     "restaurant_name",
     "link",
     "description",
+    "address",
+    "city",
+    "state",
+    "zip",
     restaurant_name,
     link,
     description,
+    address,
+    city,
+    state,
+    zip,
   ];
   instance.query(sql, replacements, (err, results) => {
     if (err) {
@@ -49,14 +58,31 @@ const createRestaurant = (req, res) => {
 };
 
 const editRestaurant = (req, res) => {
-  const { restaurant_name, link, description } = req.body;
+  const { restaurant_name, link, description, address, city, state, zip } =
+    req.body;
   const { id } = req.params;
   // console.log(req, "this is the request");
   const sql = `
-    UPDATE restaurants SET restaurant_name = ?, link = ?, description = ?
+    UPDATE restaurants SET 
+      restaurant_name = ?,
+      link = ?, 
+      description = ?, 
+      address = ?, 
+      city = ?, 
+      state = ?, 
+      zip = ?
     WHERE (id = ?);
   `;
-  const replacements = [restaurant_name, link, description, id];
+  const replacements = [
+    restaurant_name,
+    link,
+    description,
+    address,
+    city,
+    state,
+    zip,
+    id,
+  ];
   instance.query(sql, replacements, (err, results) => {
     if (err) {
       return res.status(500).json({ error: err });
@@ -64,6 +90,7 @@ const editRestaurant = (req, res) => {
     res.status(200).json(results);
   });
 };
+
 const deleteRestaurant = (req, res) => {
   const { id } = req.params;
   // console.log(req, "this is the request");
@@ -84,5 +111,5 @@ module.exports = {
   getRestaurantById,
   createRestaurant,
   editRestaurant,
-  deleteRestaurant
+  deleteRestaurant,
 };
